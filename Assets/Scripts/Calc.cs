@@ -5,97 +5,96 @@ namespace AssemblyCSharp
 {
     public static class Calc
     {
-        private static List<int[]> stateCases;
-        private static List<int> stateScores;
-        
         private static Dictionary<int[], int> cases;
         
         static Calc() {
             cases = new Dictionary<int[], int>();
             
             cases.Add(new int[]{1, 1, 1, 1, 1}, 100000);
-            cases.Add(new int[]{1, 2, 2, 2, 2, 1}, 50000);
-            cases.Add(new int[]{1, 1, 1, 1}, 50000);
+            cases.Add(new int[]{1, 2, 2, 2, 2, 1}, 40000);
+            cases.Add(new int[]{1, 1, 1, 1}, 40000);
             cases.Add(new int[]{2, 2, 1, 2}, 10000);
             cases.Add(new int[]{2, 1, 2, 2}, 10000);
             cases.Add(new int[]{1, 2, 2, 2, 2}, 10000);
             cases.Add(new int[]{2, 2, 2, 2, 1}, 10000);
-            cases.Add(new int[]{1, 2, 2, 2}, 5000);
-            cases.Add(new int[]{2, 2, 2, 1}, 5000);
+            cases.Add(new int[]{1, 2, 2, 2}, 4000);
+            cases.Add(new int[]{2, 2, 2, 1}, 4000);
             cases.Add(new int[]{1, 1, 1}, 1000);
-            cases.Add(new int[]{1, 2, 2}, 500);
-            cases.Add(new int[]{2, 2, 1}, 500);
+            cases.Add(new int[]{1, 2, 2}, 400);
+            cases.Add(new int[]{2, 2, 1}, 400);
             cases.Add(new int[]{1, 1}, 100);
             cases.Add(new int[]{2, 1}, 10);
             cases.Add(new int[]{1, 2}, 10);
         }
         
-        private static int StateScore(Grid.States[] stateCase, Grid[,] grid, int stateScore)
+        private static int ScoreCase(int[] c, int score, Board board, Player me, Player opponent)
         {
-            var score = 0;
-            for (int i = 0; i < grid.GetLength(0) - (stateCase.Length - 1); i++)
-                for (int j = 0; j < grid.GetLength(1); j++)
-                    score += ScoreHorizontal(stateCase, i, j, grid, stateScore);
+            var totalScore = 0;
+            var length = c.Length;
+            
+            for (int i = 0; i < board.Width - length + 1; i++)
+                for (int j = 0; j < board.Height; j++)
+                    totalScore += ScoreHorizontal(c, score, i, j, board, me, opponent);
 
-            for (int i = 0; i < grid.GetLength(0); i++)
-                for (int j = 0; j < grid.GetLength(1) - (stateCase.Length - 1); j++)
-                    score += ScoreVertical(stateCase, i, j, grid, stateScore);
+            for (int i = 0; i < board.Width; i++)
+                for (int j = 0; j < board.Height - length + 1; j++)
+                    totalScore += ScoreVertical(c, score, i, j, board, me, opponent);
 
-            for (int i = 0; i < grid.GetLength(0) - (stateCase.Length - 1); i ++)
-                for (int j = 0; j < grid.GetLength(1) - (stateCase.Length - 1); j ++)
-                    score += ScoreDiagonalLeftRight(stateCase, i, j, grid, stateScore);
+            for (int i = 0; i < board.Width - length + 1; i++)
+                for (int j = 0; j < board.Height - length + 1; j++)
+                    totalScore += ScoreDiagonalLeftRight(c, score, i, j, board, me, opponent);
 
-            for (int i = grid.GetLength(0) - 1; i >= stateCase.Length - 1; i --)
-                for (int j = 0; j < grid.GetLength(1) - (stateCase.Length - 1); j ++)
-                    score += ScoreDiagonalRightLeft(stateCase, i, j, grid, stateScore);
+            for (int i = board.Width - 1; i >= length - 1; i--)
+                for (int j = 0; j < board.Height - length + 1; j++)
+                    totalScore += ScoreDiagonalRightLeft(c, score, i, j, board, me, opponent);
 
+            return totalScore;
+        }
+
+        private static int ScoreHorizontal(int[] c, int score, int x, int y, Board board, Player me, Player opponent) {
+            var length = c.Length;
+            for (int i = 0; i < length; i ++)
+                if (!IsMatch(c[i], board.Cell(x + i, y), me, opponent))
+                    return 0;
             return score;
         }
-
-        private static int ScoreHorizontal(Grid.States[] stateCase, int column, int row, Grid[,] grid, int stateScore)
-        {
-            for (int i = 0; i < stateCase.Length; i ++)
-            {
-                if (stateCase[i] != grid[column + i, row].State)
+        
+        private static int ScoreVertical(int[] c, int score, int x, int y, Board board, Player me, Player opponent) {
+            var length = c.Length;
+            for (int i = 0; i < length; i ++)
+                if (!IsMatch(c[i], board.Cell(x, y + i), me, opponent))
                     return 0;
-            }
-            return stateScore;
-        }
-
-        private static int ScoreVertical(Grid.States[] stateCase, int column, int row, Grid[,] grid, int stateScore)
-        {
-            for (int i = 0; i < stateCase.Length; i ++)
-            {
-                if (stateCase[i] != grid[column, row + i].State)
-                    return 0;
-            }
-            return stateScore;
-        }
-
-        private static int ScoreDiagonalLeftRight(Grid.States[] stateCase, int column, int row, Grid[,] grid, int stateScore)
-        {
-            for (int i = 0; i < stateCase.Length; i ++)
-            {
-                if (stateCase[i] != grid[column + i, row + i].State)
-                    return 0;
-            }
-            return stateScore;
-
-        }
-
-        private static int ScoreDiagonalRightLeft(Grid.States[] stateCase, int column, int row, Grid[,] grid, int stateScore)
-        {
-            for (int i = 0; i < stateCase.Length; i ++)
-            {
-                if (stateCase[i] != grid[column - i, row + i].State)
-                    return 0;
-            }
-            return stateScore;
-
+            return score;
         }
         
-        public static bool CheckWin(Board board, Player player) {
-            return true;
+        private static int ScoreDiagonalLeftRight(int[] c, int score, int x, int y, Board board, Player me, Player opponent) {
+            var length = c.Length;
+            for (int i = 0; i < length; i ++)
+                if (!IsMatch(c[i], board.Cell(x + i, y + i), me, opponent))
+                    return 0;
+            return score;
+        }
+        
+        private static int ScoreDiagonalRightLeft(int[] c, int score, int x, int y, Board board, Player me, Player opponent) {
+            var length = c.Length;
+            for (int i = 0; i < length; i ++)
+                if (!IsMatch(c[i], board.Cell(x - i, y + i), me, opponent))
+                    return 0;
+            return score;
+        }
+        
+        private static bool IsMatch(int c, int cell, Player me, Player opponent) {
+            if (c == 1)
+                return cell == me.Symbol;
+            else
+                return cell == opponent.Symbol;
+        }
+        
+        public static bool CheckWin(Board board, Player player, Player opponent) {
+            var c = new int[]{1, 1, 1, 1, 1};
+            var s = 1;
+            var score = ScoreCase(c, s, board, player, opponent);
+            return score >= s;
         }
     }
 }

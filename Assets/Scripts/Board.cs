@@ -20,6 +20,10 @@ namespace AssemblyCSharp
         public int Width { get { return this.width; } }
         public int Height { get { return this.height; } }
 
+        public int Cell(int x, int y) {
+            return this.board[x, y];
+        }
+        
         public bool PlacePiece(int x, int y, Player player) {
             
             if (x < 0 || x >= this.width) {
@@ -38,7 +42,7 @@ namespace AssemblyCSharp
             }
             
             this.board[x, y] = player.Symbol;
-            this.validateBoard();
+            this.ValidateBoard();
             
             if (this.OnPiecePlaced != null)
                 this.OnPiecePlaced(x, y, player);
@@ -46,7 +50,7 @@ namespace AssemblyCSharp
             return true;
         }
         
-        private void validateBoard() {
+        private void ValidateBoard() {
             
         }
         
