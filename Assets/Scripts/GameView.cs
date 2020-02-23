@@ -6,9 +6,9 @@ using Grid = AssemblyCSharp.Grid;
 
 public class GameView : MonoBehaviour
 {
-    public  GameBoard  Board;
-    public  int        BoardSize;
-    public  GameObject MyCamera;
+    public GameBoard Board;
+    public int BoardSize;
+    public GameObject MyCamera;
 
     private GameObject blackPiece;
     private GameObject whitePiece;
@@ -20,7 +20,7 @@ public class GameView : MonoBehaviour
     private string boardPiecePath = "Board/Boardpiece";
     private string whitePiecePath = "Pieces/White";
     private string blackPiecePath = "Pieces/Black";
-    private string textPath       = "Display/Winning";
+    private string textPath = "Display/Winning";
 
     private bool turn;
 
