@@ -6,11 +6,11 @@ namespace AssemblyCSharp
     public class GameBoard
     {
         public Grid[,] AllGrids;
-        public int     Length;
+        public int Length;
         private List<Grid.States[]> stateCases;
-        private List<int>           stateScores;
+        private List<int> stateScores;
 
-        public List<int[]>         moveRowColumn;
+        public List<int[]> moveRowColumn;
 
         public GameBoard(int n)
         {
