@@ -49,11 +49,27 @@ namespace AssemblyCSharp
             return true;
         }
         
+        public void RemovePiece(int x, int y) {
+            this.board[x, y] = 0;
+        }
+        
         public Board(int width, int height) {
             this.width = width;
             this.height = height;
             
             this.board = new int[this.width, this.height];
+        }
+        
+        public Board(Board b) {
+            this.width = b.width;
+            this.height = b.height;
+            
+            this.board = new int[this.width, this.height];
+            for (int i = 0; i < this.width; i++) {
+                for (int j = 0; j < this.height; j++) {
+                    this.board[i, j] = b.board[i, j];
+                }
+            }
         }
         
         public Board(int width, int height, bool extra)
