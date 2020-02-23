@@ -40,7 +40,7 @@ public class GameView : MonoBehaviour
         var player1 = new Player(1);
         var player2 = new Player(2);
         player1.OnMakeMove = HumanMakeMove;
-        player2.OnMakeMove = HumanMakeMove;
+        player2.OnMakeMove = AIMakeMove;
         
         this.players = new Player[2];
         this.players[0] = player1;
