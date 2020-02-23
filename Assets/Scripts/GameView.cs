@@ -45,8 +45,8 @@ public class GameView : MonoBehaviour
         for (int i = 0; i < this.width; i++) {
             for (int j = 0; j < this.height; j++) {
                 var b = GameObject.Instantiate(boardPiece) as GameObject;
-                var posX = Utils.ConvertToPositions(i, this.width);
-                var posY = Utils.ConvertToPositions(j, this.height);
+                var posX = Utils.ConvertToPosition(i, this.width);
+                var posY = Utils.ConvertToPosition(j, this.height);
                 b.transform.localPosition = new Vector3(posX, posY, -1);
                 b.transform.localScale = new Vector3(0.42f, 0.42f, 0f);
                 b.transform.parent = boardPiece.transform.parent;
@@ -85,9 +85,11 @@ public class GameView : MonoBehaviour
             return;
         
         var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
-        int x = Convert.ToInt32(mousePos.x / 2) * 2;
-        int y = Convert.ToInt32(mousePos.y / 2) * 2;
-        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, this.me);
+        int x = Utils.RoundToNearestPosition(mousePos.x, (this.width + 1) % 2);
+        int y = Utils.RoundToNearestPosition(mousePos.y, (this.height + 1) % 2);
+        x = Utils.ConvertToIndex(x, this.width);
+        y = Utils.ConvertToIndex(y, this.height);
+        var success = this.board.PlacePiece(x, y, this.me);
         
         if (! success)
             return;
@@ -103,8 +105,8 @@ public class GameView : MonoBehaviour
     private void HandleOnPiecePlaced(int x, int y, Player player) {
         var piece = this.pieces[player];
         var p = GameObject.Instantiate(piece) as GameObject;
-        var posX = Utils.ConvertToPositions(x, this.width);
-        var posY = Utils.ConvertToPositions(y, this.height);
+        var posX = Utils.ConvertToPosition(x, this.width);
+        var posY = Utils.ConvertToPosition(y, this.height);
         p.transform.localPosition = new Vector3(posX, posY, -2);
         p.transform.localScale = new Vector3(0.56f, 0.56f, 0f);
         p.transform.parent = piece.transform.parent;
