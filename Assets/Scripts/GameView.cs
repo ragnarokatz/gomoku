@@ -30,13 +30,14 @@ public class GameView : MonoBehaviour
     
     private void Start()
     {
+        Calc.OnWin = this.HandleOnWin;
         this.board = new Board(this.width, this.height);
         this.board.OnPiecePlaced = HandleOnPiecePlaced;
         
         var player1 = new Player(1);
         var player2 = new Player(2);
-        player1.Think = HumanThink;
-        player2.Think = HumanThink;
+        player1.OnMakeMove = HumanMakeMove;
+        player2.OnMakeMove = HumanMakeMove;
         
         this.players = new Player[2];
         this.players[0] = player1;
@@ -80,33 +81,47 @@ public class GameView : MonoBehaviour
             return;
         }
         */
-        var player = GetCurrentPlayer();
-        player.Think();
+        var player = GetMe();
+        player.OnMakeMove();
     }
     
     private void OnDestroy() {
+        foreach (var player in this.players) {
+            player.OnMakeMove = null;
+        }
         this.board.OnPiecePlaced = null;
+        Calc.OnWin = null;
     }
     
-    private Player GetCurrentPlayer() {
-        return this.players[this.turn? 1 : 0];
+    private Player GetMe() {
+        return this.players[this.turn ? 1 : 0];
     }
     
-    private void AIThink() {
+    private Player GetOpponent() {
+        return this.players[this.turn ? 0 : 1];
+    }
+    
+    private void AIMakeMove() {
         
     }
     
-    private void HumanThink() {
+    private void HumanMakeMove() {
         if (! Input.GetMouseButtonDown(0))
             return;
+        
+        var me = this.GetMe();
+        var opponent = this.GetOpponent();
         
         var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
         int x = Convert.ToInt32(mousePos.x / 2) * 2;
         int y = Convert.ToInt32(mousePos.y / 2) * 2;
-        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, this.GetCurrentPlayer());
+        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, me);
         
-        if (success)
-            this.turn = !this.turn;
+        if (! success)
+            return;
+        
+        Calc.ValidateWin(this.board, me, opponent);
+        this.turn = !this.turn;
     }
     
     private void HandleOnPiecePlaced(int x, int y, Player player) {
@@ -117,7 +132,8 @@ public class GameView : MonoBehaviour
         p.transform.parent = piece.transform.parent;
     }
     
-    private void HandleOnFinishGame() {
+    private void HandleOnWin() {
+        this.running = false;
         this.textPiece.SetActive(true);
     }
     

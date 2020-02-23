@@ -42,16 +42,11 @@ namespace AssemblyCSharp
             }
             
             this.board[x, y] = player.Symbol;
-            this.ValidateBoard();
             
             if (this.OnPiecePlaced != null)
                 this.OnPiecePlaced(x, y, player);
             
             return true;
-        }
-        
-        private void ValidateBoard() {
-            
         }
         
         public Board(int width, int height) {

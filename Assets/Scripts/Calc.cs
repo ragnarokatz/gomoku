@@ -6,6 +6,7 @@ namespace AssemblyCSharp
     public static class Calc
     {
         private static Dictionary<int[], int> cases;
+        public static Action OnWin;
         
         static Calc() {
             cases = new Dictionary<int[], int>();
@@ -90,11 +91,16 @@ namespace AssemblyCSharp
                 return cell == opponent.Symbol;
         }
         
-        public static bool CheckWin(Board board, Player player, Player opponent) {
+        public static bool ValidateWin(Board board, Player player, Player opponent) {
             var c = new int[]{1, 1, 1, 1, 1};
             var s = 1;
             var score = ScoreCase(c, s, board, player, opponent);
-            return score >= s;
+            if (score >= s) {
+                Calc.OnWin();
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }
