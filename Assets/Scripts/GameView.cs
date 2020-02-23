@@ -23,8 +23,7 @@ public class GameView : MonoBehaviour
     private bool turn;
     private bool running;
 
-    // Use this for initialization
-    void Start ()
+    private void Start ()
     {
         Board = new GameBoard(this.width, this.height);
 
@@ -34,8 +33,7 @@ public class GameView : MonoBehaviour
         running = true;
     }
 
-    // Update is called once per frame
-    void Update ()
+    private void Update ()
     {
         if (! running)
             return;
@@ -86,7 +84,7 @@ public class GameView : MonoBehaviour
         }
     }
 
-    void AITurn()
+    private void AITurn()
     {
         var maxScore = -1;
         var rowColumn = new int[2];
@@ -107,7 +105,7 @@ public class GameView : MonoBehaviour
         turn = true;
     }
 
-    void MakeMove(int x, int y, GameObject piece, Grid.States state)
+    private void MakeMove(int x, int y, GameObject piece, Grid.States state)
     {
         var p = GameObject.Instantiate(piece) as GameObject;
         p.transform.localPosition = new Vector3(x, y, -2);
@@ -116,7 +114,7 @@ public class GameView : MonoBehaviour
         Board.AllGrids[x / 2 + this.width / 2, y / 2 + this.height / 2].State = state;
     }
 
-    void AssembleBoard()
+    private void AssembleBoard()
     {
         this.widthStart = (this.width - 1) * -1;
         this.widthEnd = (this.width - 1);
@@ -138,7 +136,7 @@ public class GameView : MonoBehaviour
         }
     }
 
-    void ResetBoard()
+    private void ResetBoard()
     {
     }
 
