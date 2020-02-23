@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AssemblyCSharp
 {
-    public class GameBoard
+    public class Board
     {
         public Grid[,] AllGrids;
         private int width;
@@ -12,8 +12,10 @@ namespace AssemblyCSharp
         private List<int> stateScores;
 
         public List<int[]> moveRowColumn;
-
-        public GameBoard(int width, int height)
+        public delegate void PlacePieceEvent(int width, int height, Player player);
+        public event PlacePieceEvent OnPiecePlaced;
+        
+        public Board(int width, int height)
         {
             this.width = width;
             this.height = height;

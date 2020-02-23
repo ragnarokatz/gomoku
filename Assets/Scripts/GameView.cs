@@ -6,7 +6,7 @@ using Grid = AssemblyCSharp.Grid;
 
 public class GameView : MonoBehaviour
 {
-    public GameBoard Board;
+    public Board Board;
     
     [SerializeField] private int width;
     [SerializeField] private int height;
@@ -22,10 +22,10 @@ public class GameView : MonoBehaviour
     private int heightEnd;
     private bool turn;
     private bool running;
-
-    private void Start ()
+    
+    private void Start()
     {
-        Board = new GameBoard(this.width, this.height);
+        Board = new Board(this.width, this.height);
 
         AssembleBoard();
 
@@ -33,7 +33,7 @@ public class GameView : MonoBehaviour
         running = true;
     }
 
-    private void Update ()
+    private void Update()
     {
         if (! running)
             return;
