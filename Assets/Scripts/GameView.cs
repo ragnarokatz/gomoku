@@ -35,9 +35,11 @@ public class GameView : MonoBehaviour
         
         var player1 = new Player(1);
         var player2 = new Player(2);
+        
         this.players = new Player[2];
         this.players[0] = player1;
         this.players[1] = player2;
+        
         this.pieces = new Dictionary<Player, GameObject>(2);
         this.pieces[player1] = this.blackPiece;
         this.pieces[player2] = this.whitePiece;
@@ -46,7 +48,7 @@ public class GameView : MonoBehaviour
 
         AssembleBoard();
 
-        turn = true;
+        turn = false;
         running = true;
     }
 
@@ -76,14 +78,21 @@ public class GameView : MonoBehaviour
             return;
         }
         */
-
+        HumanThink();
+    }
+    
+    private Player GetCurrentPlayer() {
+        return this.players[this.turn? 1 : 0];
+    }
+    
+    private void AIPlayerMove() {
+        
+    }
+    
+    private void HumanThink() {
         if (! Input.GetMouseButtonDown(0))
             return;
         
-        HandleMouseClick();
-    }
-    
-    private void HandleMouseClick() {
         var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
         int x = Convert.ToInt32(mousePos.x / 2) * 2;
         int y = Convert.ToInt32(mousePos.y / 2) * 2;
@@ -99,6 +108,10 @@ public class GameView : MonoBehaviour
         p.transform.localPosition = new Vector3(x * 2 - this.width + 1, y * 2 - this.height + 1, -2);
         p.transform.localScale = new Vector3(0.56f, 0.56f, 0f);
         p.transform.parent = piece.transform.parent;
+    }
+    
+    private void HandleOnFinishGame() {
+        
     }
     
     private void AITurn()
