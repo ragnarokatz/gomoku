@@ -17,7 +17,6 @@ namespace AssemblyCSharp
         public Board(int width, int height) {
             this.width = width;
             this.height = height;
-            
             this.board = new int[this.width, this.height];
         }
         

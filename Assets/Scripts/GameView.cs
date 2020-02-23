@@ -16,11 +16,6 @@ public class GameView : MonoBehaviour
     private Board board;
     private Player[] players;
     private Dictionary<Player, GameObject> pieces;
-
-    private int widthStart;
-    private int widthEnd;
-    private int heightStart;
-    private int heightEnd;
     
     private bool turn;
     private bool running;
@@ -47,15 +42,19 @@ public class GameView : MonoBehaviour
         this.pieces[player1] = this.blackPiece;
         this.pieces[player2] = this.whitePiece;
 
+        for (int i = 0; i < this.width; i++) {
+            for (int j = 0; j < this.height; j++) {
+                var b = GameObject.Instantiate(boardPiece) as GameObject;
+                var posX = Utils.ConvertToPositions(i, this.width);
+                var posY = Utils.ConvertToPositions(j, this.height);
+                b.transform.localPosition = new Vector3(posX, posY, -1);
+                b.transform.localScale = new Vector3(0.42f, 0.42f, 0f);
+                b.transform.parent = boardPiece.transform.parent;
+            }
+        }
+        
         this.turn = false;
         this.running = true;
-        
-        this.widthStart = (this.width - 1) * -1;
-        this.widthEnd = (this.width - 1);
-        this.heightStart = (this.height - 1) * -1;
-        this.heightEnd = (this.height - 1);
-        
-        this.AssembleBoard();
     }
 
     private void Update()
@@ -104,7 +103,9 @@ public class GameView : MonoBehaviour
     private void HandleOnPiecePlaced(int x, int y, Player player) {
         var piece = this.pieces[player];
         var p = GameObject.Instantiate(piece) as GameObject;
-        p.transform.localPosition = new Vector3(x * 2 - this.width + 1, y * 2 - this.height + 1, -2);
+        var posX = Utils.ConvertToPositions(x, this.width);
+        var posY = Utils.ConvertToPositions(y, this.height);
+        p.transform.localPosition = new Vector3(posX, posY, -2);
         p.transform.localScale = new Vector3(0.56f, 0.56f, 0f);
         p.transform.parent = piece.transform.parent;
     }
@@ -112,22 +113,5 @@ public class GameView : MonoBehaviour
     private void HandleOnWin() {
         this.running = false;
         this.textPiece.SetActive(true);
-    }
-    
-    private void AssembleBoard()
-    {
-        var board = new List<int[]>();
-
-        for (int i = widthStart; i <= widthEnd; i = i + 2)
-        {
-            for (int j = heightStart; j <= heightEnd; j = j + 2)
-            {
-                board.Add(new int[]{i, j});
-                var b = GameObject.Instantiate(boardPiece) as GameObject;
-                b.transform.localPosition = new Vector3(i, j, -1);
-                b.transform.localScale = new Vector3(0.42f, 0.42f, 0f);
-                b.transform.parent = boardPiece.transform.parent;
-            }
-        }
     }
 }

@@ -9,7 +9,6 @@ namespace AssemblyCSharp
             var maxScore = 0;
             var maxScoreX = 0;
             var maxScoreY = 0;
-            
             var copy = new Board(board);
             
             for (int i = 0; i < copy.Width; i++) {
@@ -18,14 +17,12 @@ namespace AssemblyCSharp
                         continue;
                     
                     copy.PlacePiece(i, j, me);
-                    
                     var score = Calc.ScoreBoard(copy, me, opponent);
                     if (score > maxScore) {
                         maxScore = score;
                         maxScoreX = i;
                         maxScoreY = j;
                     }
-                    
                     copy.RemovePiece(i, j);
                 }
             }
