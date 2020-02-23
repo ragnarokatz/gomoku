@@ -16,8 +16,10 @@ public class GameView : MonoBehaviour
     [SerializeField] private GameObject whitePiece;
     [SerializeField] private GameObject textPiece;
 
-    private int start;
-    private int end;
+    private int widthStart;
+    private int widthEnd;
+    private int heightStart;
+    private int heightEnd;
     private bool turn;
     private bool running;
 
@@ -69,9 +71,9 @@ public class GameView : MonoBehaviour
 
         var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
         
-        for (int i = start; i <= end; i = i + 2)
+        for (int i = this.widthStart; i <= this.widthEnd; i = i + 2)
         {
-            for (int j = start; j <= end; j = j + 2)
+            for (int j = this.heightStart; j <= this.heightEnd; j = j + 2)
             {
                 if (Math.Abs(mousePos.x - i) < 1 &&
                     Math.Abs(mousePos.y - j) < 1 &&
@@ -116,14 +118,16 @@ public class GameView : MonoBehaviour
 
     void AssembleBoard()
     {
-        start = (this.width - 1) * -1;
-        end = (this.height - 1);
+        this.widthStart = (this.width - 1) * -1;
+        this.widthEnd = (this.width - 1);
+        this.heightStart = (this.height - 1) * -1;
+        this.heightEnd = (this.height - 1);
 
         var board = new List<int[]>();
 
-        for (int i = start; i <= end; i = i + 2)
+        for (int i = widthStart; i <= widthEnd; i = i + 2)
         {
-            for (int j = start; j <= end; j = j + 2)
+            for (int j = heightStart; j <= heightEnd; j = j + 2)
             {
                 board.Add(new int[]{i, j});
                 var b = GameObject.Instantiate(boardPiece) as GameObject;
