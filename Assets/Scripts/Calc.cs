@@ -6,12 +6,12 @@ namespace AssemblyCSharp
     public static class Calc
     {
         private static Dictionary<int[], int> cases;
-        public static Action OnWin;
+        public static readonly int[] CASE_WIN = new int[]{1, 1, 1, 1, 1};
+        public static readonly int SCORE_WIN = 100000;
         
         static Calc() {
             cases = new Dictionary<int[], int>();
-            
-            cases.Add(new int[]{1, 1, 1, 1, 1}, 100000);
+            cases.Add(Calc.CASE_WIN, Calc.SCORE_WIN);
             cases.Add(new int[]{1, 2, 2, 2, 2, 1}, 40000);
             cases.Add(new int[]{1, 1, 1, 1}, 40000);
             cases.Add(new int[]{2, 2, 1, 2}, 10000);
@@ -39,7 +39,7 @@ namespace AssemblyCSharp
             return totalScore;
         }
         
-        private static int ScoreCase(int[] c, int score, Board board, Player me, Player opponent)
+        public static int ScoreCase(int[] c, int score, Board board, Player me, Player opponent)
         {
             var totalScore = 0;
             var length = c.Length;
@@ -100,18 +100,6 @@ namespace AssemblyCSharp
                 return cell == me.Symbol;
             else
                 return cell == opponent.Symbol;
-        }
-        
-        public static bool ValidateWin(Board board, Player player, Player opponent) {
-            var c = new int[]{1, 1, 1, 1, 1};
-            var s = 1;
-            var score = ScoreCase(c, s, board, player, opponent);
-            if (score >= s) {
-                Calc.OnWin();
-                return true;
-            } else {
-                return false;
-            }
         }
     }
 }

@@ -10,7 +10,8 @@ namespace AssemblyCSharp
         private int[,] board;
 
         public Action<int, int, Player> OnPiecePlaced;
-        
+        public Action OnWin;
+
         public int Width { get { return this.width; } }
         public int Height { get { return this.height; } }
         
@@ -63,6 +64,16 @@ namespace AssemblyCSharp
         
         public void RemovePiece(int x, int y) {
             this.board[x, y] = 0;
+        }
+        
+        public bool Validate(Player player, Player opponent) {
+            var score = Calc.ScoreCase(Calc.CASE_WIN, Calc.SCORE_WIN, this, player, opponent);
+            if (score >= Calc.SCORE_WIN) {
+                this.OnWin();
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

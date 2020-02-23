@@ -20,14 +20,14 @@ public class GameView : MonoBehaviour
     private bool turn;
     private bool running;
     
-    private Player Me { get { return this.players[this.turn ? 1 : 0]; } }
-    private Player Opponent { get { return this.players[this.turn ? 0 : 1]; } }
+    private Player me { get { return this.players[this.turn ? 1 : 0]; } }
+    private Player opponent { get { return this.players[this.turn ? 0 : 1]; } }
 
     private void Start()
     {
-        Calc.OnWin = this.HandleOnWin;
         this.board = new Board(this.width, this.height);
         this.board.OnPiecePlaced = HandleOnPiecePlaced;
+        this.board.OnWin = this.HandleOnWin;
         
         var player1 = new Player(1);
         var player2 = new Player(2);
@@ -62,7 +62,7 @@ public class GameView : MonoBehaviour
         if (! running)
             return;
         
-        this.Me.OnMakeMove();
+        this.me.OnMakeMove();
     }
     
     private void OnDestroy() {
@@ -70,12 +70,12 @@ public class GameView : MonoBehaviour
             player.OnMakeMove = null;
         }
         this.board.OnPiecePlaced = null;
-        Calc.OnWin = null;
+        this.board.OnWin = null;
     }
     
     private void AIMakeMove() {
-        var result = AI.Think(this.board, this.Me, this.Opponent);
-        this.board.PlacePiece(result.Item1, result.Item2, this.Me);
+        var result = AI.Think(this.board, this.me, this.opponent);
+        this.board.PlacePiece(result.Item1, result.Item2, this.me);
         this.DoPostMakeMove();
     }
     
@@ -87,7 +87,7 @@ public class GameView : MonoBehaviour
         var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
         int x = Convert.ToInt32(mousePos.x / 2) * 2;
         int y = Convert.ToInt32(mousePos.y / 2) * 2;
-        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, this.Me);
+        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, this.me);
         
         if (! success)
             return;
@@ -96,7 +96,7 @@ public class GameView : MonoBehaviour
     }
     
     private void DoPostMakeMove() {
-        Calc.ValidateWin(this.board, this.Me, this.Opponent);
+        this.board.Validate(this.me, this.opponent);
         this.turn = !this.turn;
     }
     
