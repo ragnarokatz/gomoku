@@ -10,17 +10,14 @@ public class GameView : MonoBehaviour
     public int BoardSize;
     public GameObject MyCamera;
 
-    private GameObject blackPiece;
-    private GameObject whitePiece;
-    private GameObject textPiece;
+    [SerializeField] private GameObject blackPiece;
+    [SerializeField] private GameObject whitePiece;
+    [SerializeField] private GameObject textPiece;
 
     private int start;
     private int end;
 
     private string boardPiecePath = "Board/Boardpiece";
-    private string whitePiecePath = "Pieces/White";
-    private string blackPiecePath = "Pieces/Black";
-    private string textPath = "Display/Winning";
 
     private bool turn;
 
@@ -32,8 +29,6 @@ public class GameView : MonoBehaviour
         Board = new GameBoard(BoardSize);
 
         AssembleBoard();
-
-        textPiece = GameObject.Find(textPath);
 
         turn = true;
         running = true;
@@ -127,9 +122,6 @@ public class GameView : MonoBehaviour
         end = (Board.Length - 1);
 
         var boardPiece = GameObject.Find(boardPiecePath);
-
-        whitePiece = GameObject.Find(whitePiecePath);
-        blackPiece = GameObject.Find(blackPiecePath);
 
         var board = new List<int[]>();
 
