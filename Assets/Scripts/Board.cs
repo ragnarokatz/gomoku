@@ -21,8 +21,19 @@ namespace AssemblyCSharp
         public int Height { get { return this.height; } }
 
         public bool PlacePiece(int x, int y, Player player) {
+            
+            if (x < 0 || x >= this.width) {
+                Log.Trace("Cannot place piece at {0}, {1}, x is out of bounds.", x, y);
+                return false;
+            }
+            
+            if (y < 0 || y >= this.height) {
+                Log.Trace("Cannot place piece at {0}, {1}, y is out of bounds.", x, y);
+                return false;
+            }
+            
             if (this.board[x, y] != 0) {
-                // Log.Trace("Cannot place piece at {0}, {1}, already occupied.", x, y);
+                Log.Trace("Cannot place piece at {0}, {1}, already occupied.", x, y);
                 return false;
             }
             

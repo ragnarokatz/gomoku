@@ -11,7 +11,6 @@ namespace AssemblyCSharp
         private static Dictionary<int[], int> cases;
         
         static Calc() {
-            
             cases = new Dictionary<int[], int>();
             
             cases.Add(new int[]{1, 1, 1, 1, 1}, 100000);
