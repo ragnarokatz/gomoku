@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using AssemblyCSharp;
+using Grid = AssemblyCSharp.Grid;
 
 public class GameView : MonoBehaviour
 {
@@ -77,7 +78,7 @@ public class GameView : MonoBehaviour
         {
             for (int j = start; j <= end; j = j + 2)
             {
-                var mousePos = MyCamera.camera.ScreenToWorldPoint(Input.mousePosition);
+                var mousePos = MyCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
 
                 if (Math.Abs(mousePos.x - i) < 1 &&
                     Math.Abs(mousePos.y - j) < 1 &&
@@ -114,7 +115,7 @@ public class GameView : MonoBehaviour
     void MakeMove(int x, int y, GameObject piece, Grid.States state)
     {
         var p = GameObject.Instantiate(piece) as GameObject;
-        p.transform.localPosition = new Vector3(x, y, 0);
+        p.transform.localPosition = new Vector3(x, y, -2);
         p.transform.localScale = new Vector3(0.56f, 0.56f, 0f);
         p.transform.parent = piece.transform.parent;
         Board.AllGrids[x / 2 + Board.Length / 2, y / 2 + Board.Length / 2].State = state;
@@ -138,7 +139,7 @@ public class GameView : MonoBehaviour
             {
                 board.Add(new int[]{i, j});
                 var b = GameObject.Instantiate(boardPiece) as GameObject;
-                b.transform.localPosition = new Vector3(i, j, 0);
+                b.transform.localPosition = new Vector3(i, j, -1);
                 b.transform.localScale = new Vector3(0.42f, 0.42f, 0f);
                 b.transform.parent = boardPiece.transform.parent;
             }
