@@ -28,6 +28,9 @@ public class GameView : MonoBehaviour
     private bool turn;
     private bool running;
     
+    private Player Me { get { return this.players[this.turn ? 1 : 0]; } }
+    private Player Opponent { get { return this.players[this.turn ? 0 : 1]; } }
+
     private void Start()
     {
         Calc.OnWin = this.HandleOnWin;
@@ -64,8 +67,7 @@ public class GameView : MonoBehaviour
         if (! running)
             return;
         
-        var player = GetMe();
-        player.OnMakeMove();
+        this.Me.OnMakeMove();
     }
     
     private void OnDestroy() {
@@ -76,34 +78,30 @@ public class GameView : MonoBehaviour
         Calc.OnWin = null;
     }
     
-    private Player GetMe() {
-        return this.players[this.turn ? 1 : 0];
-    }
-    
-    private Player GetOpponent() {
-        return this.players[this.turn ? 0 : 1];
-    }
-    
     private void AIMakeMove() {
-        
+        var result = AI.Think(this.board, this.Me, this.Opponent);
+        this.board.PlacePiece(result.Item1, result.Item2, this.Me);
+        this.DoPostMakeMove();
     }
     
     private void HumanMakeMove() {
+        
         if (! Input.GetMouseButtonDown(0))
             return;
-        
-        var me = this.GetMe();
-        var opponent = this.GetOpponent();
         
         var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
         int x = Convert.ToInt32(mousePos.x / 2) * 2;
         int y = Convert.ToInt32(mousePos.y / 2) * 2;
-        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, me);
+        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, this.Me);
         
         if (! success)
             return;
         
-        Calc.ValidateWin(this.board, me, opponent);
+        this.DoPostMakeMove();
+    }
+    
+    private void DoPostMakeMove() {
+        Calc.ValidateWin(this.board, this.Me, this.Opponent);
         this.turn = !this.turn;
     }
     
