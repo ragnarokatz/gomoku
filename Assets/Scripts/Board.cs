@@ -15,8 +15,7 @@ namespace AssemblyCSharp
         
         private int[,] board;
 
-        public delegate void PlacePieceEvent(int x, int y, Player player);
-        public event PlacePieceEvent OnPiecePlaced;
+        public Action<int, int, Player> OnPiecePlaced;
         
         public bool PlacePiece(int x, int y, Player player) {
             if (this.board[x, y] != 0) {

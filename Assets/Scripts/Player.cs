@@ -9,7 +9,7 @@ namespace AssemblyCSharp
         
         public int Symbol { get { return this.symbol; } }
         
-        public Action OnThink;
+        public Action Think;
 
         public Player(int symbol) {
             if (symbol == 0) {

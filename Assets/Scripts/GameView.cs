@@ -31,10 +31,12 @@ public class GameView : MonoBehaviour
     private void Start()
     {
         this.board = new Board(this.width, this.height);
-        this.board.OnPiecePlaced += HandleOnPiecePlaced;
+        this.board.OnPiecePlaced = HandleOnPiecePlaced;
         
         var player1 = new Player(1);
         var player2 = new Player(2);
+        player1.Think = HumanThink;
+        player2.Think = HumanThink;
         
         this.players = new Player[2];
         this.players[0] = player1;
@@ -78,14 +80,19 @@ public class GameView : MonoBehaviour
             return;
         }
         */
-        HumanThink();
+        var player = GetCurrentPlayer();
+        player.Think();
+    }
+    
+    private void OnDestroy() {
+        this.board.OnPiecePlaced = null;
     }
     
     private Player GetCurrentPlayer() {
         return this.players[this.turn? 1 : 0];
     }
     
-    private void AIPlayerMove() {
+    private void AIThink() {
         
     }
     
@@ -96,7 +103,7 @@ public class GameView : MonoBehaviour
         var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
         int x = Convert.ToInt32(mousePos.x / 2) * 2;
         int y = Convert.ToInt32(mousePos.y / 2) * 2;
-        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, this.players[this.turn? 1 : 0]);
+        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, this.GetCurrentPlayer());
         
         if (success)
             this.turn = !this.turn;
@@ -111,7 +118,7 @@ public class GameView : MonoBehaviour
     }
     
     private void HandleOnFinishGame() {
-        
+        this.textPiece.SetActive(true);
     }
     
     private void AITurn()
