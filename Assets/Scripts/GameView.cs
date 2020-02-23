@@ -28,6 +28,8 @@ public class GameView : MonoBehaviour
     
     private void Start()
     {
+        this.board = new Board(this.width, this.height);
+        this.players = new Player[] { new Player(1), new Player(2) };
         Board = new Board(this.width, this.height);
 
         AssembleBoard();

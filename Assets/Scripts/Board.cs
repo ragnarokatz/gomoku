@@ -19,6 +19,11 @@ namespace AssemblyCSharp
         public event PlacePieceEvent OnPiecePlaced;
         
         public void PlacePiece(int x, int y, Player player) {
+            if (this.board[x, y] != 0) {
+                Log.Trace("Cannot place piece at {0}, {1}, already occupied.", x, y);
+                return;
+            }
+            
             this.board[x, y] = player.Symbol;
             
             if (this.OnPiecePlaced != null)
