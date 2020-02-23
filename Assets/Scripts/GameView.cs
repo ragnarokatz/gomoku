@@ -8,19 +8,16 @@ public class GameView : MonoBehaviour
 {
     public GameBoard Board;
     public int BoardSize;
-    public GameObject MyCamera;
-
+    
+    [SerializeField] private GameObject MyCamera;
+    [SerializeField] private GameObject boardPiece;
     [SerializeField] private GameObject blackPiece;
     [SerializeField] private GameObject whitePiece;
     [SerializeField] private GameObject textPiece;
 
     private int start;
     private int end;
-
-    private string boardPiecePath = "Board/Boardpiece";
-
     private bool turn;
-
     private bool running;
 
     // Use this for initialization
@@ -120,8 +117,6 @@ public class GameView : MonoBehaviour
     {
         start = (Board.Length - 1) * -1;
         end = (Board.Length - 1);
-
-        var boardPiece = GameObject.Find(boardPiecePath);
 
         var board = new List<int[]>();
 

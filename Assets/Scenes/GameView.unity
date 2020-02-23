@@ -691,6 +691,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BoardSize: 7
   MyCamera: {fileID: 1825006419}
+  boardPiece: {fileID: 750058089}
   blackPiece: {fileID: 1714482219}
   whitePiece: {fileID: 666417838}
   textPiece: {fileID: 2060224016}
