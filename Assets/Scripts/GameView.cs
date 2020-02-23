@@ -18,18 +18,30 @@ public class GameView : MonoBehaviour
 
     private Board board;
     private Player[] players;
-    
+    private Dictionary<Player, GameObject> pieces;
+
     private int widthStart;
     private int widthEnd;
     private int heightStart;
     private int heightEnd;
+    
     private bool turn;
     private bool running;
     
     private void Start()
     {
         this.board = new Board(this.width, this.height);
-        this.players = new Player[] { new Player(1), new Player(2) };
+        this.board.OnPiecePlaced += HandleOnPiecePlaced;
+        
+        var player1 = new Player(1);
+        var player2 = new Player(2);
+        this.players = new Player[2];
+        this.players[0] = player1;
+        this.players[1] = player2;
+        this.pieces = new Dictionary<Player, GameObject>(2);
+        this.pieces[player1] = this.blackPiece;
+        this.pieces[player2] = this.whitePiece;
+        
         Board = new Board(this.width, this.height);
 
         AssembleBoard();
@@ -43,6 +55,7 @@ public class GameView : MonoBehaviour
         if (! running)
             return;
 
+        /*
         if (Board.CheckWin(Board.AllGrids) == "White")
         {
             var t = GameObject.Instantiate(textPiece) as GameObject;
@@ -62,35 +75,30 @@ public class GameView : MonoBehaviour
             running = false;
             return;
         }
-
-        if (! turn)
-        {
-            AITurn();
-            return;
-        }
+        */
 
         if (! Input.GetMouseButtonDown(0))
             return;
-
-        var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
         
-        for (int i = this.widthStart; i <= this.widthEnd; i = i + 2)
-        {
-            for (int j = this.heightStart; j <= this.heightEnd; j = j + 2)
-            {
-                if (Math.Abs(mousePos.x - i) < 1 &&
-                    Math.Abs(mousePos.y - j) < 1 &&
-                    Board.AllGrids[i / 2 + this.width / 2, j / 2 + this.height / 2].State == Grid.States.Unoccupied)
-                {
-                    MakeMove(i, j, blackPiece, Grid.States.Black);
-                    turn = false;
-                }
-            }
-        }
+        HandleMouseClick();
     }
-
-    private void HandleOnPiecePlaced(int x, int y, Player player) {
+    
+    private void HandleMouseClick() {
+        var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
+        int x = Convert.ToInt32(mousePos.x / 2) * 2;
+        int y = Convert.ToInt32(mousePos.y / 2) * 2;
+        var success = this.board.PlacePiece((x - 1 + this.width) / 2, (y - 1 + this.height) / 2, this.players[this.turn? 1 : 0]);
         
+        if (success)
+            this.turn = !this.turn;
+    }
+    
+    private void HandleOnPiecePlaced(int x, int y, Player player) {
+        var piece = this.pieces[player];
+        var p = GameObject.Instantiate(piece) as GameObject;
+        p.transform.localPosition = new Vector3(x * 2 - this.width + 1, y * 2 - this.height + 1, -2);
+        p.transform.localScale = new Vector3(0.56f, 0.56f, 0f);
+        p.transform.parent = piece.transform.parent;
     }
     
     private void AITurn()

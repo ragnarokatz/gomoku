@@ -20,7 +20,7 @@ public class ClientInit : MonoBehaviour
         }
     }
 
-    private void Init()
+    private void Awake()
     {
         Log.OnLog += HandleOnLog;
     }

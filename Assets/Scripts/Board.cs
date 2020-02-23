@@ -15,22 +15,36 @@ namespace AssemblyCSharp
         
         private int[,] board;
 
-        public delegate void PlacePieceEvent(int x, int y, int symbol);
+        public delegate void PlacePieceEvent(int x, int y, Player player);
         public event PlacePieceEvent OnPiecePlaced;
         
-        public void PlacePiece(int x, int y, Player player) {
+        public bool PlacePiece(int x, int y, Player player) {
             if (this.board[x, y] != 0) {
-                Log.Trace("Cannot place piece at {0}, {1}, already occupied.", x, y);
-                return;
+                // Log.Trace("Cannot place piece at {0}, {1}, already occupied.", x, y);
+                return false;
             }
             
             this.board[x, y] = player.Symbol;
+            this.validateBoard();
             
             if (this.OnPiecePlaced != null)
-                this.OnPiecePlaced(x, y, player.Symbol);
+                this.OnPiecePlaced(x, y, player);
+            
+            return true;
         }
         
-        public Board(int width, int height)
+        private void validateBoard() {
+            
+        }
+        
+        public Board(int width, int height) {
+            this.width = width;
+            this.height = height;
+            
+            this.board = new int[this.width, this.height];
+        }
+        
+        public Board(int width, int height, bool extra)
         {
             this.width = width;
             this.height = height;
