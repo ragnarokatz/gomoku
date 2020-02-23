@@ -689,8 +689,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22482c1a092c5404c9fa68fbf00e758d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BoardSize: 7
-  MyCamera: {fileID: 1825006419}
+  width: 7
+  height: 7
+  gameCamera: {fileID: 1825006423}
   boardPiece: {fileID: 750058089}
   blackPiece: {fileID: 1714482219}
   whitePiece: {fileID: 666417838}

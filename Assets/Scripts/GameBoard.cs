@@ -6,16 +6,18 @@ namespace AssemblyCSharp
     public class GameBoard
     {
         public Grid[,] AllGrids;
-        public int Length;
+        private int width;
+        private int height;
         private List<Grid.States[]> stateCases;
         private List<int> stateScores;
 
         public List<int[]> moveRowColumn;
 
-        public GameBoard(int n)
+        public GameBoard(int width, int height)
         {
-            AllGrids = ResetGrid(n);
-            Length = n;
+            this.width = width;
+            this.height = height;
+            this.AllGrids = ResetGrid();
 
             stateCases  = new List<Grid.States[]>();
             stateScores = new List<int>();
@@ -54,12 +56,12 @@ namespace AssemblyCSharp
             stateScores.Add(10);
         }
 
-        private Grid[,] ResetGrid(int n)
+        private Grid[,] ResetGrid()
         {
-            var grid = new Grid[n,n];
-            for (int i = 0; i < n; i++)
+            var grid = new Grid[this.width, this.height];
+            for (int i = 0; i < this.width; i++)
             {
-                for (int j = 0; j < n; j++)
+                for (int j = 0; j < this.height; j++)
                     grid[i,j] = new Grid(Grid.States.Unoccupied);
             }
             return grid;
@@ -94,9 +96,9 @@ namespace AssemblyCSharp
 
             var allMoves = new List<Grid[,]>();
 
-            for (int i = 0; i < Length; i ++)
+            for (int i = 0; i < this.width; i ++)
             {
-                for (int j = 0; j < Length; j ++)
+                for (int j = 0; j < this.height; j ++)
                 {
                     if (oldGrid[i,j].State == Grid.States.Unoccupied)
                     {
@@ -111,10 +113,10 @@ namespace AssemblyCSharp
 
         private Grid[,] Move(int x, int y, Grid.States turn, Grid[,] oldGrid)
         {
-            var grid = new Grid[Length,Length];
-            for (int i = 0; i < Length; i++)
+            var grid = new Grid[this.width, this.height];
+            for (int i = 0; i < this.width; i++)
             {
-                for (int j = 0; j < Length; j++)
+                for (int j = 0; j < this.height; j++)
                     grid[i,j] = new Grid(oldGrid[i,j].State);
             }
             grid[x, y].State = turn;

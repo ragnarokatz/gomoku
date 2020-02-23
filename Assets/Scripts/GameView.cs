@@ -7,9 +7,10 @@ using Grid = AssemblyCSharp.Grid;
 public class GameView : MonoBehaviour
 {
     public GameBoard Board;
-    public int BoardSize;
     
-    [SerializeField] private GameObject MyCamera;
+    [SerializeField] private int width;
+    [SerializeField] private int height;
+    [SerializeField] private Camera gameCamera;
     [SerializeField] private GameObject boardPiece;
     [SerializeField] private GameObject blackPiece;
     [SerializeField] private GameObject whitePiece;
@@ -23,7 +24,7 @@ public class GameView : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        Board = new GameBoard(BoardSize);
+        Board = new GameBoard(this.width, this.height);
 
         AssembleBoard();
 
@@ -66,15 +67,15 @@ public class GameView : MonoBehaviour
         if (! Input.GetMouseButtonDown(0))
             return;
 
+        var mousePos = this.gameCamera.ScreenToWorldPoint(Input.mousePosition);
+        
         for (int i = start; i <= end; i = i + 2)
         {
             for (int j = start; j <= end; j = j + 2)
             {
-                var mousePos = MyCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-
                 if (Math.Abs(mousePos.x - i) < 1 &&
                     Math.Abs(mousePos.y - j) < 1 &&
-                    Board.AllGrids[i / 2 + Board.Length / 2, j / 2 + Board.Length / 2].State == Grid.States.Unoccupied)
+                    Board.AllGrids[i / 2 + this.width / 2, j / 2 + this.height / 2].State == Grid.States.Unoccupied)
                 {
                     MakeMove(i, j, blackPiece, Grid.States.Black);
                     turn = false;
@@ -99,7 +100,7 @@ public class GameView : MonoBehaviour
             }
         }
 
-        MakeMove(rowColumn[0] * 2 - (Board.Length - 1), rowColumn[1]  * 2 - (Board.Length - 1),
+        MakeMove(rowColumn[0] * 2 - (this.width - 1), rowColumn[1]  * 2 - (this.height - 1),
             whitePiece, Grid.States.White);
         turn = true;
     }
@@ -110,13 +111,13 @@ public class GameView : MonoBehaviour
         p.transform.localPosition = new Vector3(x, y, -2);
         p.transform.localScale = new Vector3(0.56f, 0.56f, 0f);
         p.transform.parent = piece.transform.parent;
-        Board.AllGrids[x / 2 + Board.Length / 2, y / 2 + Board.Length / 2].State = state;
+        Board.AllGrids[x / 2 + this.width / 2, y / 2 + this.height / 2].State = state;
     }
 
     void AssembleBoard()
     {
-        start = (Board.Length - 1) * -1;
-        end = (Board.Length - 1);
+        start = (this.width - 1) * -1;
+        end = (this.height - 1);
 
         var board = new List<int[]>();
 
