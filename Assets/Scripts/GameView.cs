@@ -16,6 +16,9 @@ public class GameView : MonoBehaviour
     [SerializeField] private GameObject whitePiece;
     [SerializeField] private GameObject textPiece;
 
+    private Board board;
+    private Player[] players;
+    
     private int widthStart;
     private int widthEnd;
     private int heightStart;
@@ -84,6 +87,10 @@ public class GameView : MonoBehaviour
         }
     }
 
+    private void HandleOnPiecePlaced(int x, int y, Player player) {
+        
+    }
+    
     private void AITurn()
     {
         var maxScore = -1;

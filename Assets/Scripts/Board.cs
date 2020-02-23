@@ -12,8 +12,18 @@ namespace AssemblyCSharp
         private List<int> stateScores;
 
         public List<int[]> moveRowColumn;
-        public delegate void PlacePieceEvent(int width, int height, Player player);
+        
+        private int[,] board;
+
+        public delegate void PlacePieceEvent(int x, int y, int symbol);
         public event PlacePieceEvent OnPiecePlaced;
+        
+        public void PlacePiece(int x, int y, Player player) {
+            this.board[x, y] = player.Symbol;
+            
+            if (this.OnPiecePlaced != null)
+                this.OnPiecePlaced(x, y, player.Symbol);
+        }
         
         public Board(int width, int height)
         {
