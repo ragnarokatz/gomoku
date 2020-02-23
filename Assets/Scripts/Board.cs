@@ -17,6 +17,9 @@ namespace AssemblyCSharp
 
         public Action<int, int, Player> OnPiecePlaced;
         
+        public int Width { get { return this.width; } }
+        public int Height { get { return this.height; } }
+
         public bool PlacePiece(int x, int y, Player player) {
             if (this.board[x, y] != 0) {
                 // Log.Trace("Cannot place piece at {0}, {1}, already occupied.", x, y);
