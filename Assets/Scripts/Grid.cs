@@ -6,9 +6,9 @@ namespace AssemblyCSharp
     {
         public enum States
         {
-            Unoccupied,
-            Black,
-            White,
+            Unoccupied = 0,
+            Black = 1,
+            White = 2,
         }
 
         public States State;
