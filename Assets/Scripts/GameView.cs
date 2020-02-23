@@ -46,41 +46,24 @@ public class GameView : MonoBehaviour
         this.pieces = new Dictionary<Player, GameObject>(2);
         this.pieces[player1] = this.blackPiece;
         this.pieces[player2] = this.whitePiece;
+
+        this.turn = false;
+        this.running = true;
+        
+        this.widthStart = (this.width - 1) * -1;
+        this.widthEnd = (this.width - 1);
+        this.heightStart = (this.height - 1) * -1;
+        this.heightEnd = (this.height - 1);
         
         Board = new Board(this.width, this.height);
-
         AssembleBoard();
-
-        turn = false;
-        running = true;
     }
 
     private void Update()
     {
         if (! running)
             return;
-
-        /*
-        if (Board.CheckWin(Board.AllGrids) == "White")
-        {
-            var t = GameObject.Instantiate(textPiece) as GameObject;
-            t.transform.localPosition = new Vector3(10, 1, -5);
-            t.transform.parent = textPiece.transform.parent;
-            t.GetComponent<TextMesh>().text = "Blue Wins";
-            running = false;
-            return;
-        }
-
-        if (Board.CheckWin(Board.AllGrids) == "Black")
-        {
-            var t = GameObject.Instantiate(textPiece) as GameObject;
-            t.transform.localPosition = new Vector3(10, 1, -5);
-            t.transform.parent = textPiece.transform.parent;
-            t.GetComponent<TextMesh>().text = "Green Wins";
-            running = false;
-            return;
-        }
-        */
+        
         var player = GetMe();
         player.OnMakeMove();
     }
@@ -169,11 +152,6 @@ public class GameView : MonoBehaviour
 
     private void AssembleBoard()
     {
-        this.widthStart = (this.width - 1) * -1;
-        this.widthEnd = (this.width - 1);
-        this.heightStart = (this.height - 1) * -1;
-        this.heightEnd = (this.height - 1);
-
         var board = new List<int[]>();
 
         for (int i = widthStart; i <= widthEnd; i = i + 2)
@@ -188,10 +166,4 @@ public class GameView : MonoBehaviour
             }
         }
     }
-
-    private void ResetBoard()
-    {
-    }
-
 }
-

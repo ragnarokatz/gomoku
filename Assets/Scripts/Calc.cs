@@ -28,6 +28,17 @@ namespace AssemblyCSharp
             cases.Add(new int[]{1, 2}, 10);
         }
         
+        public static int ScoreBoard(Board board, Player me, Player opponent) {
+            var totalScore = 0;
+            foreach (var kvp in Calc.cases)
+            {
+                var c = kvp.Key;
+                var score = kvp.Value;
+                totalScore += ScoreCase(c, score, board, me, opponent);
+            }
+            return totalScore;
+        }
+        
         private static int ScoreCase(int[] c, int score, Board board, Player me, Player opponent)
         {
             var totalScore = 0;
