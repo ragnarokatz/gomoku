@@ -2,12 +2,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using AssemblyCSharp;
-using Grid = AssemblyCSharp.Grid;
 
 public class GameView : MonoBehaviour
 {
-    public Board Board;
-    
     [SerializeField] private int width;
     [SerializeField] private int height;
     [SerializeField] private Camera gameCamera;
@@ -58,8 +55,7 @@ public class GameView : MonoBehaviour
         this.heightStart = (this.height - 1) * -1;
         this.heightEnd = (this.height - 1);
         
-        Board = new Board(this.width, this.height);
-        AssembleBoard();
+        this.AssembleBoard();
     }
 
     private void Update()
@@ -118,36 +114,6 @@ public class GameView : MonoBehaviour
         this.textPiece.SetActive(true);
     }
     
-    private void AITurn()
-    {
-        var maxScore = -1;
-        var rowColumn = new int[2];
-        var allMoves = Board.AllMoves(Grid.States.White, Board.AllGrids);
-        for (int i = 0; i < allMoves.Count; i ++)
-        {
-            var score = Board.BoardScore(allMoves[i]);
-            if (score >= maxScore)
-            {
-                maxScore = score;
-                rowColumn[0] = Board.moveRowColumn[i][0];
-                rowColumn[1] = Board.moveRowColumn[i][1];
-            }
-        }
-
-        MakeMove(rowColumn[0] * 2 - (this.width - 1), rowColumn[1]  * 2 - (this.height - 1),
-            whitePiece, Grid.States.White);
-        turn = true;
-    }
-
-    private void MakeMove(int x, int y, GameObject piece, Grid.States state)
-    {
-        var p = GameObject.Instantiate(piece) as GameObject;
-        p.transform.localPosition = new Vector3(x, y, -2);
-        p.transform.localScale = new Vector3(0.56f, 0.56f, 0f);
-        p.transform.parent = piece.transform.parent;
-        Board.AllGrids[x / 2 + this.width / 2, y / 2 + this.height / 2].State = state;
-    }
-
     private void AssembleBoard()
     {
         var board = new List<int[]>();
