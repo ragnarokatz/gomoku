@@ -9,8 +9,9 @@ namespace AssemblyCSharp
         private int height;
         private int[,] board;
 
-        public Action<int, int, Player> OnPiecePlaced;
-        public Action OnWin;
+        public Action<int, int, Player> OnStonePlaced;
+        public Action<Player> OnWin;
+        public Action OnResetBoard;
 
         public int Width { get { return this.width; } }
         public int Height { get { return this.height; } }
@@ -37,43 +38,62 @@ namespace AssemblyCSharp
             return this.board[x, y];
         }
         
-        public bool PlacePiece(int x, int y, Player player) {
+        public bool PlaceStone(int x, int y, Player player) {
             
             if (x < 0 || x >= this.width) {
-                Log.Trace("Cannot place piece at {0}, {1}, x is out of bounds.", x, y);
+                Log.Trace("Cannot place stone at {0}, {1}, x is out of bounds.", x, y);
                 return false;
             }
             
             if (y < 0 || y >= this.height) {
-                Log.Trace("Cannot place piece at {0}, {1}, y is out of bounds.", x, y);
+                Log.Trace("Cannot place stone at {0}, {1}, y is out of bounds.", x, y);
                 return false;
             }
             
             if (this.board[x, y] != 0) {
-                Log.Trace("Cannot place piece at {0}, {1}, already occupied.", x, y);
+                Log.Trace("Cannot place stone at {0}, {1}, already occupied.", x, y);
                 return false;
             }
             
             this.board[x, y] = player.Symbol;
             
-            if (this.OnPiecePlaced != null)
-                this.OnPiecePlaced(x, y, player);
+            if (this.OnStonePlaced != null)
+                this.OnStonePlaced(x, y, player);
             
             return true;
         }
         
-        public void RemovePiece(int x, int y) {
+        public void RemoveStone(int x, int y) {
             this.board[x, y] = 0;
         }
         
         public bool Validate(Player player, Player opponent) {
             var score = Calc.ScoreCase(Calc.CASE_WIN, Calc.SCORE_WIN, this, player, opponent);
             if (score >= Calc.SCORE_WIN) {
-                this.OnWin();
+                this.OnWin(player);
                 return true;
             } else {
+                if (this.IsFilled()) {
+                    this.OnWin(null);
+                }
                 return false;
             }
+        }
+        
+        public void ResetBoard() {
+            this.board = new int[this.width, this.height];
+            this.OnResetBoard();
+        }
+        
+        private bool IsFilled() {
+            for (int i = 0; i < this.width; i++) {
+                for (int j = 0; j < this.height; j++) {
+                    if (this.board[i, j] == 0)
+                        return false;
+                }
+            }
+            
+            return true;
         }
     }
 }

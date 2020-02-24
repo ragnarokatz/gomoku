@@ -16,14 +16,14 @@ namespace AssemblyCSharp
                     if (copy.Cell(i, j) != 0)
                         continue;
                     
-                    copy.PlacePiece(i, j, me);
+                    copy.PlaceStone(i, j, me);
                     var score = Calc.ScoreBoard(copy, me, opponent);
                     if (score > maxScore) {
                         maxScore = score;
                         maxScoreX = i;
                         maxScoreY = j;
                     }
-                    copy.RemovePiece(i, j);
+                    copy.RemoveStone(i, j);
                 }
             }
             
